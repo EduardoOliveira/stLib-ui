@@ -4,6 +4,7 @@ import ProjectsIndex from '../views/projects/ProjectsIndex.vue'
 import ProjectPage from '../views/projects/ProjectPage.vue'
 import ProjectEdit from '../views/projects/ProjectEdit.vue'
 import ProjectModels from '../views/projects/ProjectModels.vue'
+import ProjectImages from '../views/projects/ProjectImages.vue'
 
 
 import DiscoveryIndex from '../views/discovery/DiscoveryIndex.vue'
@@ -26,6 +27,10 @@ const router = new VueRouter({
         {
           path: '',
           component: ProjectModels
+        },
+        {
+          path: 'images',
+          component: ProjectImages
         },
         {
           path: 'edit',

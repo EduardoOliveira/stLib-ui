@@ -1,12 +1,10 @@
 <template>
   <div class="card is-flex-shrink-0 m-1">
     <div class="card-image">
-      <figure class="image is-16by9">
-        <img
-          :src="baseUrl + project?.default_image_path"
-          alt="Placeholder image"
-        />
-      </figure>
+      <b-image
+      :src="baseUrl + project?.default_image_path"
+            ratio="4by3"
+        ></b-image>
     </div>
     <div class="card-content">
       <div class="media">

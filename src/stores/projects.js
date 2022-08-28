@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import pinia from "./store.js";
+
 
 export const useProjectsStore = defineStore({
   id: "projects",
@@ -45,6 +45,8 @@ export const useProjectsStore = defineStore({
       for (let i in response.data) {
         if (!this.projects.find((p) => p.uuid == response.data[i].uuid)) {
           response.data[i].models = [];
+          response.data[i].images = [];
+          response.data[i].slices = [];
           this.filter.searchableKeys.add(response.data[i].name);
           for (let tag of response.data[i].tags) {
             this.filter.searchableKeys.add(tag);
@@ -57,6 +59,7 @@ export const useProjectsStore = defineStore({
       const response = await axios.get(`/projects/${uuid}`);
       let p = response.data;
       p.models = [];
+      p.images = [];
       this.projects.push(p);
     },
     async percistProject() {
@@ -69,12 +72,17 @@ export const useProjectsStore = defineStore({
           if (!this.projects[i].models || this.projects[i].models.length == 0) {
             await this.fetchProjectModels(uuid);
           }
+          if (!this.projects[i].images || this.projects[i].images.length == 0) {
+            await this.fetchProjectImages(uuid);
+          }
           this.selectedProject = this.projects[i];
           return;
         }
       }
+      
       await this.fetchProject(uuid);
       await this.fetchProjectModels(uuid);
+      await this.fetchProjectImages(uuid);
       this.selectProject(uuid);
     },
     async fetchProjectModels(uuid) {
@@ -82,14 +90,26 @@ export const useProjectsStore = defineStore({
         if (this.projects[i].uuid === uuid) {
           if (this.projects[i].models.length === 0) {
             const response = await axios.get(`/projects/${uuid}/models`);
-            if (!this.projects[i].models) {
-              this.projects[i].models = [];
-            }
             this.projects[i].models.push(...response.data);
           }
           return;
         }
       }
+    },
+    async fetchProjectImages(uuid) {
+      for (let i in this.projects) {
+        if (this.projects[i].uuid === uuid) {
+          if (this.projects[i].images.length === 0) {
+            const response = await axios.get(`/projects/${uuid}/images`);
+            this.projects[i].images.push(...response.data);
+          }
+          return;
+        }
+      }
+    },
+    async setSelectedProjectImage(imagePath) {
+      this.selectedProject.default_image_path=imagePath;
+      await this.percistProject();
     },
   },
 });
