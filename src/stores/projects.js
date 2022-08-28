@@ -75,6 +75,7 @@ export const useProjectsStore = defineStore({
       }
       await this.fetchProject(uuid);
       await this.fetchProjectModels(uuid);
+      this.selectProject(uuid);
     },
     async fetchProjectModels(uuid) {
       for (let i in this.projects) {
