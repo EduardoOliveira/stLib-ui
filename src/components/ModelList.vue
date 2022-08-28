@@ -15,7 +15,7 @@
         </div>
         
         <footer class="card-footer">
-            <a href="#" class="card-footer-item">Download</a>
+            <a :href="baseUrl+'/models/get/'+model.sha1" class="card-footer-item">Download</a>
             <a v-if="hasViewer" @click="onAddToViewer(model)" class="card-footer-item">3D View</a>
         </footer>
     </div>
