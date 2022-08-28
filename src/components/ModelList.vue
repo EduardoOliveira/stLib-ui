@@ -5,7 +5,7 @@
             <div class="media">
                 <div class="media-left">
                 <figure class="image is-48x48">
-                    <img :src="'http://192.168.2.186:8000/models/render/' +model.sha1" :alt="model.name" >
+                    <img :src="baseUrl+'/models/render/' +model.sha1" :alt="model.name" >
                 </figure>
                 </div>
                 <div class="media-content">
@@ -27,7 +27,9 @@ export default {
   name: "ModelList",
   created() {},
   data() {
-    return {};
+    return {
+      baseUrl: import.meta.env.VITE_API_URL,
+    };
   },
   props: {
     models: {

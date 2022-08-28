@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <section class="hero has-background mb-5">
-      <img class="hero-background is-transparent" :src="'http://192.168.2.186:8000' + project.default_image_path" />
+      <img class="hero-background is-transparent" :src="baseUrl + project.default_image_path" />
       <div class="hero-body">
         <div class="container">
           <p class="title">
@@ -65,7 +65,7 @@ export default {
   created() { },
   data() {
     return {
-      error: null,
+      baseUrl: import.meta.env.VITE_API_URL,
     };
   },
   computed: {

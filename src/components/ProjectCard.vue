@@ -3,7 +3,7 @@
     <div class="card-image">
       <figure class="image is-16by9">
         <img
-          :src="'http://192.168.2.186:8000' + project?.default_image_path"
+          :src="baseUrl + project?.default_image_path"
           alt="Placeholder image"
         />
       </figure>
@@ -11,10 +11,13 @@
     <div class="card-content">
       <div class="media">
         <div class="media-content">
-          <router-link class="title is-4" :to="{path:'/'+context+'/' + project.uuid}">{{
-            project.name
-          }}</router-link>
+          <router-link
+            class="title is-4"
+            :to="{ path: '/' + context + '/' + project.uuid }"
+            >{{ project.name }}</router-link
+          >
           <!--<p class="subtitle is-6">@johnsmith</p>-->
+          
         </div>
       </div>
     </div>
@@ -26,7 +29,9 @@ export default {
   name: "ProjectCard",
   created() {},
   data() {
-    return {};
+    return {
+      baseUrl: import.meta.env.VITE_API_URL,
+    };
   },
   props: {
     project: {
@@ -43,7 +48,6 @@ export default {
 </script>
 
 <style scoped>
-
 .card {
   width: 300px;
   max-width: 300px;

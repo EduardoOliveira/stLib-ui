@@ -10,7 +10,7 @@ import 'buefy/dist/buefy.css'
 
 Vue.use(Buefy)
 Vue.use(PiniaVuePlugin)
-axios.defaults.baseURL = "http://192.168.2.186:8000"
+axios.defaults.baseURL = import.meta.env.VITE_API_URL
 
 
 new Vue({

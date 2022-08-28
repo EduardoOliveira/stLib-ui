@@ -22,6 +22,7 @@ export default {
     const renderer = new THREE.WebGLRenderer({ antialias: true });
 
     return {
+      baseUrl: import.meta.env.VITE_API_URL,
       scene: scene,
       camera: camera,
       cameraTarget: cameraTarget,
@@ -85,7 +86,7 @@ export default {
     },
     addModel: function (model) {
       let that = this;
-      this.loader.load('http://192.168.2.186:8000/models/get/' + model.sha1, function (geometry) {
+      this.loader.load(this.baseUrl +'/models/get/' + model.sha1, function (geometry) {
 
         console.log("loaded")
         const mesh = new THREE.Mesh(geometry, that.material);
