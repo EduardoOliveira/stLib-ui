@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
-
 export const useProjectsStore = defineStore({
   id: "projects",
   state: () => ({
@@ -24,7 +23,7 @@ export const useProjectsStore = defineStore({
     },
     getFilteredProjects: (state) => {
       state.filteredProjects = [];
-      
+
       for (let i in state.projects) {
         if (
           state.filter.initialized == state.projects[i].initialized &&
@@ -44,19 +43,19 @@ export const useProjectsStore = defineStore({
   actions: {
     async fetchProjects() {
       const response = await axios.get("/projects");
-      this.filter.searchableKeys=[]
+      this.filter.searchableKeys = [];
       for (let i in response.data) {
         if (!this.projects.find((p) => p.uuid == response.data[i].uuid)) {
           response.data[i].models = [];
           response.data[i].images = [];
           response.data[i].slices = [];
-          
-          if(!this.filter.searchableKeys.includes(response.data[i].name)){
+
+          if (!this.filter.searchableKeys.includes(response.data[i].name)) {
             this.filter.searchableKeys.push(response.data[i].name);
           }
 
           for (let tag of response.data[i].tags) {
-            if(!this.filter.searchableKeys.includes(tag)){
+            if (!this.filter.searchableKeys.includes(tag)) {
               this.filter.searchableKeys.push(tag);
             }
           }
@@ -92,48 +91,48 @@ export const useProjectsStore = defineStore({
           return;
         }
       }
-      
+
       await this.fetchProject(uuid);
       await this.fetchProjectModels(uuid);
       await this.fetchProjectImages(uuid);
       await this.fetchProjectSlices(uuid);
       this.selectProject(uuid);
     },
-    async fetchProjectModels(uuid) {
+    async fetchProjectModels(uuid, force = false) {
       for (let i in this.projects) {
         if (this.projects[i].uuid === uuid) {
-          if (this.projects[i].models.length === 0) {
+          if (this.projects[i].models.length === 0 || force) {
             const response = await axios.get(`/projects/${uuid}/models`);
-            this.projects[i].models.push(...response.data);
+            this.projects[i].models = response.data;
           }
           return;
         }
       }
     },
-    async fetchProjectImages(uuid) {
+    async fetchProjectImages(uuid, force = false) {
       for (let i in this.projects) {
         if (this.projects[i].uuid === uuid) {
-          if (this.projects[i].images.length === 0) {
+          if (this.projects[i].images.length === 0 || force) {
             const response = await axios.get(`/projects/${uuid}/images`);
-            this.projects[i].images.push(...response.data);
+            this.projects[i].images = response.data;
           }
           return;
         }
       }
     },
-    async fetchProjectSlices(uuid) {
+    async fetchProjectSlices(uuid, force = false) {
       for (let i in this.projects) {
         if (this.projects[i].uuid === uuid) {
-          if (this.projects[i].slices.length === 0) {
+          if (this.projects[i].slices.length === 0 || force) {
             const response = await axios.get(`/projects/${uuid}/slices`);
-            this.projects[i].slices.push(...response.data);
+            this.projects[i].slices = response.data;
           }
           return;
         }
       }
     },
     async setSelectedProjectImage(imagePath) {
-      this.selectedProject.default_image_path=imagePath;
+      this.selectedProject.default_image_path = imagePath;
       await this.percistProject();
     },
   },
