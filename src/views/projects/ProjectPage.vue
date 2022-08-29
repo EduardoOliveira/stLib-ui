@@ -5,16 +5,16 @@
       <div class="hero-body">
         <div class="container">
           <p class="title">
-            {{ project.name }}
+            {{  project.name  }}
           </p>
           <p class="subtitle" v-if="project.external_link != ''">
-            <a :href="project.external_link">{{ project.external_link }}</a>
+            <a :href="project.external_link">{{  project.external_link  }}</a>
           </p>
           <p class="subtitle" v-if="project.external_link == ''">&nbsp;</p>
 
           <div class="tags">
             <span class="tag is-info is-light" v-for="(tag, i) in project.tags" :key="i">
-             {{ tag }}
+              {{  tag  }}
             </span>
           </div>
         </div>
@@ -52,7 +52,10 @@
         </nav>
       </div>
     </section>
-    <router-view></router-view>
+
+    <transition name="fade" mode="out-in">
+      <router-view />
+    </transition>
   </div>
 </template>
 
@@ -73,12 +76,12 @@ export default {
       return useProjectsStore(pinia).getSelectedProject;
     },
   },
- beforeRouteEnter(to, from, next) {
-   useProjectsStore(pinia).selectProject(to.params.uuid);
+  beforeRouteEnter(to, from, next) {
+    useProjectsStore(pinia).selectProject(to.params.uuid);
     next();
   },
- beforeRouteUpdate(to, from, next) {
-     useProjectsStore(pinia).selectProject(to.params.uuid);
+  beforeRouteUpdate(to, from, next) {
+    useProjectsStore(pinia).selectProject(to.params.uuid);
     next();
   },
   props: {},

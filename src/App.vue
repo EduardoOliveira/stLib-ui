@@ -14,18 +14,8 @@
           Projects
         </b-navbar-item>
       </template>
-
-      <template #end>
-        <b-navbar-item tag="div">
-          <b-navbar-dropdown label="More">
-            <b-navbar-item tag="router-link" :to="{ path: '/discovery' }">
-              Discovery
-            </b-navbar-item>
-          </b-navbar-dropdown>
-        </b-navbar-item>
-      </template>
     </b-navbar>
-      <transition name="fade">
+      <transition name="fade" mode="out-in">
         <router-view />
       </transition>
   </div>

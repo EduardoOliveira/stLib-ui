@@ -5,9 +5,7 @@ import ProjectPage from '../views/projects/ProjectPage.vue'
 import ProjectEdit from '../views/projects/ProjectEdit.vue'
 import ProjectModels from '../views/projects/ProjectModels.vue'
 import ProjectImages from '../views/projects/ProjectImages.vue'
-
-
-import DiscoveryIndex from '../views/discovery/DiscoveryIndex.vue'
+import ProjectSlices from '../views/projects/ProjectSlices.vue'
 
 Vue.use(VueRouter)
 
@@ -33,15 +31,14 @@ const router = new VueRouter({
           component: ProjectImages
         },
         {
+          path: 'slices',
+          component: ProjectSlices
+        },
+        {
           path: 'edit',
           component: ProjectEdit
         }
       ]
-    },
-    {
-      path: '/discovery',
-      name: 'Discovery',
-      component: DiscoveryIndex
     },
     /*{
       path: '/about',

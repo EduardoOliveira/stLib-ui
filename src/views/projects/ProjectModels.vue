@@ -3,10 +3,7 @@
     <div class="column is-two-fifths">
       <ModelList :models="models" :has-viewer="true" @add-to-viewer="addToVIewer"/>
     </div>
-    <ModelViewer :models="rendered" class="column is-three-fifths" style="padding-right: 1.5rem" />
-    <!--<div class="column is-three-fifths" style="padding-right: 1.5rem">
-      <div id="3d-viewer"></div>
-    </div>-->
+    <ModelViewer :models="rendered" class="box column is-three-fifths" style="padding-right: 1.5rem" />
   </div>
 </template>
 

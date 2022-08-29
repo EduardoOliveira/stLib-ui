@@ -40,10 +40,8 @@ export default {
   },
   computed: {
     filteredDataArray() {
-      return [...this.filter.searchableKeys.entries()].map(e=>e[0]).filter((option) => {
-        return (
-          option.toString().toLowerCase().indexOf(this.filter.search.toLowerCase()) >= 0
-        );
+      return this.filter.searchableKeys.filter((option) => {
+        return option.toLowerCase().indexOf(this.filter.search.toLowerCase()) >= 0;
       });
     },
 
