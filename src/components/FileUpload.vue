@@ -21,8 +21,6 @@
 </template>
 
 <script>
-import { useProjectsStore } from "../stores/projects.js";
-import pinia from "../stores/store.js";
 
 import axios from 'axios';
 export default {
@@ -53,7 +51,7 @@ export default {
     },
     progress(progress) {
       if (this.changed && progress.length == 0) {
-        useProjectsStore(pinia).fetchProjectModels(this.project.uuid, true);
+        this.$emit("uploaded");
         this.changed = false;
       }
     }

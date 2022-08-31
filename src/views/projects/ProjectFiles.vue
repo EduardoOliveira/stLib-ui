@@ -1,7 +1,7 @@
 <template>
   <div
     class="px-5 is-flex is-flex-direction-row is-flex-wrap-wrap is-align-items-flex-star is-align-content-baseline overflow-y-auto">
-    <FileUpload :project="project" :url="baseUrl + '/files'" class="upload m-1" />
+    <FileUpload :project="project" :url="baseUrl + '/files'" class="upload m-1"  @uploaded="onUploaded"/>
     <div class="card m-1" v-for="file in files" :key="file.sha1">
       <div class="card-image">
         <b-icon :icon="toIcon(file.extension)" size="is-large" type="is-info" class="mx-auto" style="display: block;">
@@ -68,6 +68,9 @@ export default {
       } else {
         return "text-box-outline"
       }
+    },
+    onUploaded() {
+      useProjectsStore(pinia).fetchProjectFiles(this.project.uuid, true);
     }
   },
   components: { FileUpload }

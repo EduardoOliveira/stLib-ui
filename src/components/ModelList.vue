@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FileUpload :project="project" :url="this.baseUrl + '/models'" v-if="hasUpload" />
+    <FileUpload :project="project" :url="this.baseUrl + '/models'" v-if="hasUpload" @uploaded="onUploaded"/>
     <div class="card mb-2" v-for="(model, sha1) in models" :key="sha1">
       <div class="card-content">
         <div class="media">
@@ -68,6 +68,9 @@ export default {
       this.visible.splice(this.visible.indexOf(model.sha1), 1);
       this.$emit("remove-from-viewer", model);
     },
+    onUploaded() {
+      useProjectsStore(pinia).fetchProjectModels(this.project.uuid, true);
+    }
   },
   components: {
     FileUpload

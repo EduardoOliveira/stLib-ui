@@ -1,7 +1,7 @@
 <template>
   <div class="mx-5 columns">
     <div class="column is-one-third">
-      <FileUpload :project="project" :url="baseUrl + '/slices'" />
+      <FileUpload :project="project" :url="baseUrl + '/slices'" @uploaded="onUploaded" />
       <div class="card mb-2" v-for="(slice, sha1) in slices" :key="sha1">
         <div class="card-content">
           <div class="media">
@@ -89,6 +89,9 @@ export default {
     onToDetails(slice) {
       this.slice = slice;
     },
+    onUploaded() {
+      useProjectsStore(pinia).fetchProjectSlices(this.project.uuid, true);
+    }
   },
   components: { FileUpload }
 };
