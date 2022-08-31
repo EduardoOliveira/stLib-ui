@@ -6,6 +6,7 @@ import ProjectEdit from '../views/projects/ProjectEdit.vue'
 import ProjectModels from '../views/projects/ProjectModels.vue'
 import ProjectImages from '../views/projects/ProjectImages.vue'
 import ProjectSlices from '../views/projects/ProjectSlices.vue'
+import ProjectFiles from '../views/projects/ProjectFiles.vue'
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,10 @@ const router = new VueRouter({
         {
           path: 'slices',
           component: ProjectSlices
+        },
+        {
+          path: 'files',
+          component: ProjectFiles
         },
         {
           path: 'edit',

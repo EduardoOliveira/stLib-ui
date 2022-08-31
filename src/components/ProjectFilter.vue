@@ -1,28 +1,27 @@
 <template>
   <b-sidebar position="static" :delay="true ? 500 : null" type="is-light" open>
-    <div class="p-2 mt-5">
-      <div class="block">
-        <img
-          src="https://raw.githubusercontent.com/buefy/buefy/dev/static/img/buefy-logo.png"
-          alt="Lightweight UI components for Vue.js based on Bulma"
-        />
-      </div>
-
+    <div class="p-2">
       <b-field label="Filter">
-        <b-autocomplete
-          rounded
-          v-model="filter.search"
-          :data="filteredDataArray"
-          placeholder="Name or Tag"
-          clearable
-          @select="(option) => (selected = option)"
-        >
+        <b-autocomplete rounded v-model="filter.search" :data="filteredDataArray" placeholder="Name" :clearable="true" @select="(option) => (selected = option)">
           <template #empty>No results found</template>
         </b-autocomplete>
       </b-field>
+      <div class="field is-grouped is-grouped-multiline">
+        <div class="control" v-for="(l, k) in filter.tags" :key="k">
+          <div class="tags has-addons is-clickable" @click="filter.search = k" >
+            <span class="tag is-dark">{{ k }}</span>
+            <span class="tag is-info">{{ l }}</span>
+          </div>
+        </div>
+      </div>
       <b-field label="Initialized">
-        <b-switch v-model="filter.initialized"></b-switch>
+        <b-switch type="is-info" v-model="filter.initialized"></b-switch>
       </b-field>
+
+      <b-field label="Initialize projects" v-if="!filter.initialized">
+        <b-button type="is-info" @click="initProjects" expanded>I'm sure</b-button>
+      </b-field>
+
     </div>
   </b-sidebar>
 </template>
@@ -44,13 +43,16 @@ export default {
         return option.toLowerCase().indexOf(this.filter.search.toLowerCase()) >= 0;
       });
     },
-
     ...mapWritableState(useProjectsStore, {
       filter: "filter",
-    }),
+    })
   },
   props: {},
-  methods: {},
+  methods: {
+    initProjects() {
+      this.$emit("initializeProjects");
+    }  
+  },
 };
 </script>
 

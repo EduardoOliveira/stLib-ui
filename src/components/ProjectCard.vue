@@ -1,5 +1,5 @@
 <template>
-  <div class="card is-flex-shrink-0 m-1">
+  <div class="card m-1">
     <div class="card-image">
       <b-image
       :src="baseUrl + project?.default_image_path"
@@ -50,5 +50,10 @@ export default {
   width: 300px;
   max-width: 300px;
   min-width: 300px;
+}
+.card .media-content{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

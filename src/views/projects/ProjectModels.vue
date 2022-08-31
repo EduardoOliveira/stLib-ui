@@ -1,9 +1,9 @@
 <template>
-  <div class="columns">
-    <div class="column is-two-fifths">
-      <ModelList :models="models" :has-viewer="true" @add-to-viewer="addToVIewer"/>
+  <div class="is-flex is-flex-grow-1 is-flex-shrink-1 overflow-inherit mx-5">
+    <div class="column is-one-fifths mr-5 overflow-y-auto">
+      <ModelList :models="models" :has-viewer="true" @add-to-viewer="addToVIewer" @remove-from-viewer="removeFromVIewer"/>
     </div>
-    <ModelViewer :models="rendered" class="box column is-three-fifths" style="padding-right: 1.5rem" />
+    <ModelViewer :models="rendered" class="box column is-four-fifths p-0"/>
   </div>
 </template>
 
@@ -23,13 +23,21 @@ export default {
   },
   computed: {
     models() {
-      return useProjectsStore(pinia).selectedProject.models;
+      return useProjectsStore(pinia).selectedProject.models.sort((a, b) => (a.name > b.name) ? 1 : -1);
     },
   },
   props: {},
   methods: {
     addToVIewer(model) {
       this.rendered.push(model);
+    },
+    removeFromVIewer(model) {
+      for(let i = 0; i < this.rendered.length; i++) {
+        if (this.rendered[i].sha1 == model.sha1) {
+          this.rendered.splice(i, 1);
+          break;
+        }
+      }
     },
   },
   components: { ModelList, ModelViewer },

@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <section class="hero has-background mb-5">
+  <div class="pt-5 is-flex is-flex-direction-column is-flex-grow-1 is-flex-shrink-1 overflow-inherit">
+    <section class="hero has-background mx-5 mb-5 is-flex-shrink-0  is-dark">
       <img class="hero-background is-transparent" :src="baseUrl + project.default_image_path" />
       <div class="hero-body">
         <div class="container">
@@ -39,6 +39,12 @@
                 custom>
                 <li :class="[isExactActive && 'is-active']">
                   <a :href="href" @click="navigate">Images</a>
+                </li>
+              </router-link>
+              <router-link :to="'/projects/' + project.uuid + '/files'" v-slot="{ href, navigate, isExactActive }"
+                custom>
+                <li :class="[isExactActive && 'is-active']">
+                  <a :href="href" @click="navigate">Files</a>
                 </li>
               </router-link>
               <router-link :to="'/projects/' + project.uuid + '/edit'" v-slot="{ href, navigate, isExactActive }"

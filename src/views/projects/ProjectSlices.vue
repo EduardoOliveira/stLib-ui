@@ -1,16 +1,17 @@
 <template>
-  <div class="columns">
+  <div class="mx-5 columns">
     <div class="column is-one-third">
+      <FileUpload :project="project" :url="baseUrl + '/slices'" />
       <div class="card mb-2" v-for="(slice, sha1) in slices" :key="sha1">
         <div class="card-content">
           <div class="media">
             <div class="media-left">
               <figure class="image is-48x48">
-                <img :src="baseUrl + '/images/' + slice.image.sha1" :alt="slice.name">
+                <img :src="baseUrl + '/images/' + slice.image?.sha1" :alt="slice.name">
               </figure>
             </div>
             <div class="media-content">
-              <p class="title is-4">{{  slice.name  }}</p>
+              <p class="title is-4">{{ slice.name }}</p>
             </div>
           </div>
         </div>
@@ -23,7 +24,7 @@
       </div>
     </div>
     <div class="box column is-two-thirds content mt-2" v-if="slice">
-          <h4>{{ slice?.name }}</h4>
+      <h4>{{ slice?.name }}</h4>
       <div class="columns">
         <div class="column is-third content">
           <h6>Path</h6>
@@ -60,6 +61,7 @@
 <script>
 import { useProjectsStore } from "../../stores/projects.js";
 import pinia from "@/stores/store.js";
+import FileUpload from "../../components/FileUpload.vue";
 
 export default {
   name: "ProjectSlices",
@@ -71,12 +73,15 @@ export default {
     };
   },
   computed: {
+    project() {
+      return useProjectsStore(pinia).selectedProject;
+    },
     slices() {
       let rtn = [];
       for (let img of useProjectsStore(pinia).selectedProject.slices) {
         rtn.push(img);
       }
-      return rtn;
+      return rtn.sort((a, b) => (a.name > b.name) ? 1 : -1);
     },
   },
   props: {},
@@ -85,6 +90,7 @@ export default {
       this.slice = slice;
     },
   },
+  components: { FileUpload }
 };
 </script>
 

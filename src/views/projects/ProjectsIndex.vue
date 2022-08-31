@@ -1,8 +1,7 @@
 <template>
-  <div class="is-flex is-flex-direction-column">
-    <div class="is-flex is-flex-direction-row">
-      <project-filter></project-filter>
-      <div class="container is-flex is-flex-direction-row is-flex-wrap-wrap is-align-items-flex-start mt-5">
+    <div class="is-flex is-flex-direction-row is-flex-grow-1 is-flex-shrink-1 overflow-inherit">
+      <project-filter @initializeProjects="onInitializeProjects"/>
+      <div class="is-flex-grow-1 is-flex-shrink-1 is-flex is-flex-wrap-wrap is-flex-direction-row is-align-items-baseline is-align-content-baseline p-5 overflow-y-auto">
         <project-card
           v-for="project in projects"
           :key="project.uuid"
@@ -11,7 +10,6 @@
         ></project-card>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -29,7 +27,7 @@ export default {
   },
   computed: {
     projects() {
-      return useProjectsStore(pinia).getFilteredProjects;
+      return useProjectsStore(pinia).getFilteredProjects.sort((a, b) => (a.name > b.name) ? 1 : -1);
     },
   },
   beforeRouteEnter(to, from, next) {
@@ -42,10 +40,14 @@ export default {
   },
   props: {},
   methods: {
+    onInitializeProjects(){
+      for(let i in this.projects){
+        useProjectsStore(pinia).percistProject(this.projects[i].uuid);
+      }
+    }
   },
 };
 </script>
 
 <style scoped>
-
 </style>

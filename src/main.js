@@ -2,6 +2,7 @@ import Vue from 'vue'
 import pinia from "@/stores/store.js";
 import {PiniaVuePlugin } from 'pinia'
 
+import '@mdi/font/css/materialdesignicons.min.css'
 import App from './App.vue'
 import router from './router'
 import axios from 'axios'

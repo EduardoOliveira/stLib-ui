@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="is-flex is-flex-direction-column is-flex-grow-1 is-flex-shrink-1 overflow-inherit">
     <b-navbar class="is-dark">
       <template #brand>
         <b-navbar-item tag="router-link" :to="{ path: '/' }">
@@ -20,3 +20,6 @@
       </transition>
   </div>
 </template>
+
+<style scoped>
+</style>

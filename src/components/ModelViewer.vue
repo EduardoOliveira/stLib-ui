@@ -15,8 +15,7 @@ export default {
 
     const camera = new THREE.PerspectiveCamera(35, 16 / 9, 1, 1000);
 
-    const cameraTarget = new THREE.Vector3(0, 5, 0);
-    const material = new THREE.MeshPhongMaterial({ color: 0xAAAAAA, specular: 0x111111, shininess: 200 });
+    const material = new THREE.MeshPhongMaterial({ color: 0x468966, specular: 0x111111, shininess: 200 });
     const light = new THREE.HemisphereLight(0x443333, 0x111122)
     const loader = new STLLoader();
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -25,7 +24,6 @@ export default {
       baseUrl: import.meta.env.VITE_API_URL,
       scene: scene,
       camera: camera,
-      cameraTarget: cameraTarget,
       material: material,
       controls: [],
       loader: loader,
@@ -38,7 +36,7 @@ export default {
   created: function () {
     this.scene.add(this.camera)
     this.scene.add(this.light)
-    this.scene.background = new THREE.Color('hsl(0, 100%, 100%)')
+    this.scene.background = new THREE.Color(0xFFFFFF )
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.outputEncoding = THREE.sRGBEncoding;
     this.renderer.shadowMap.enabled = true;
@@ -50,8 +48,7 @@ export default {
   mounted: function () {
 
     this.$refs.canvas.appendChild(this.renderer.domElement)
-    const h = this.$refs.canvas.offsetWidth * (9 / 16);
-    this.renderer.setSize(this.$refs.canvas.offsetWidth, h);
+    this.renderer.setSize(this.$refs.canvas.clientWidth, this.$refs.canvas.clientHeight);
     this.controls = new OrbitControls(this.camera, this.$refs.canvas);
     this.controls.target.set(0, 0, 0);
     this.controls.enablePan = true;
@@ -86,29 +83,69 @@ export default {
     },
     addModel: function (model) {
       let that = this;
-      this.loader.load(this.baseUrl +'/models/get/' + model.sha1, function (geometry) {
+      this.loader.load(this.baseUrl + '/models/get/' + model.sha1, function (geometry) {
 
         console.log("loaded")
         const mesh = new THREE.Mesh(geometry, that.material);
 
-        mesh.position.set(0, -5, 0);
-        mesh.rotation.set(-1, 0, 0);
+        mesh.position.set(0, -Math.PI, 0);
+        mesh.rotation.set(-Math.PI / 2, 0, 0);
         mesh.scale.set(0.1, 0.1, 0.1);
 
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         mesh.name = model.sha1;
         that.rendered[model.sha1] = mesh.uuid;
+
+        //const box = new THREE.BoxHelper(mesh, 0xffffff);
+        //that.scene.add(box);
         that.scene.add(mesh);
+
+
+        var boundingBox = new THREE.Box3()
+        boundingBox.setFromObject(mesh);
+        const center = boundingBox.getCenter(new THREE.Vector3());
+        const size = boundingBox.getSize(new THREE.Vector3());
+
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const fov = that.camera.fov * (Math.PI / 180);
+        let cameraZ = Math.abs(maxDim / 4 * Math.tan(fov * 2));
+
+        cameraZ *= 1.5; // zoom out a little so that objects don't fill the screen
+
+        that.camera.position.z = cameraZ;
+
+        const minZ = boundingBox.min.z;
+        const cameraToFarEdge = (minZ < 0) ? -minZ + cameraZ : cameraZ - minZ;
+
+        that.camera.far = cameraToFarEdge * 3;
+        that.camera.updateProjectionMatrix();
+
+        if (that.controls) {
+
+          // set camera to rotate around center of loaded object
+          that.controls.target = center;
+
+          // prevent camera from zooming out far enough to create far plane cutoff
+          that.controls.maxDistance = cameraToFarEdge * 2;
+
+          that.controls.saveState();
+
+        } else {
+
+          that.camera.lookAt(center)
+
+        }
+
       })
     },
-    remove: function (model) {
-      const object = this.scene.getObjectByProperty('uuid', model.sha1);
+    remove: function (sha1) {
+      const object = this.scene.getObjectByProperty('uuid',this.rendered[sha1]);
       this.scene.remove(object);
       object.geometry.dispose();
       object.material.dispose();
       this.renderer.renderLists.dispose();
-      delete (this.redered[model.sha1]);
+      delete (this.rendered[sha1]);
     }
   },
   watch: {

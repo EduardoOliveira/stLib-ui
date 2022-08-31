@@ -8,6 +8,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@mdi/font": "^7.0.96",
     "axios": "^0.27.2",
     "buefy": "^0.9.21",
     "pinia": "^2.0.16",

@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="mx-5 card">
     <project-edit-form></project-edit-form>
     <footer class="card-footer">
       <a href="#" class="card-footer-item" @click.prevent="save()">Save</a>
