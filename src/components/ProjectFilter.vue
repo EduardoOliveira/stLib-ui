@@ -1,5 +1,5 @@
 <template>
-  <b-sidebar position="static" :delay="true ? 500 : null" type="is-light" open>
+  <b-sidebar position="static" type="is-light" fullheight open>
     <div class="p-2">
       <b-field label="Filter">
         <b-autocomplete rounded v-model="filter.search" :data="filteredDataArray" placeholder="Name" :clearable="true" @select="(option) => (selected = option)">
