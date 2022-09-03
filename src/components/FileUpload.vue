@@ -7,32 +7,21 @@
         </div>
       </section>
     </b-upload>
-    <div>
-      <transition name="fade">
-        <div class="mb-5" v-if="progress.length > 0"></div>
-      </transition>
-      <transition name="fade" v-for="(p, i) in progress" :key="i">
-        <b-progress class='m-1' :value="p.progress" show-value format="percent">
-          {{ p.name }} - {{ p.progress }}%
-        </b-progress>
-      </transition>
-    </div>
   </div>
 </template>
 
 <script>
-
-import axios from 'axios';
+import axios from "axios";
+import { TYPE } from "vue-toastification";
 export default {
   name: "FileUpload",
-  created() { },
+  created() {},
   data() {
     return {
       dropFiles: [],
-      progress: [],
       changed: false,
       baseUrl: import.meta.env.VITE_API_URL,
-      visible: []
+      visible: [],
     };
   },
   props: {
@@ -54,7 +43,7 @@ export default {
         this.$emit("uploaded");
         this.changed = false;
       }
-    }
+    },
   },
   methods: {
     uploadFiles(files) {
@@ -62,40 +51,42 @@ export default {
         for (let i = 0; i < files.length; i++) {
           let p = {
             progress: 0,
-            name: files[i].name
+            name: files[i].name,
           };
-          this.progress.push(p);
-          const formData = new FormData();
-          formData.append('file', this.dropFiles[i]);
-          formData.append('project', this.project.uuid);
-          const headers = { 'Content-Type': 'multipart/form-data' };
-          axios.post(this.url, formData, {
-            headers: headers,
-            onUploadProgress: progressEvent => { p.progress = Math.floor(progressEvent.loaded / progressEvent.total * 100); }
-          }).then((res) => {
-            console.log(res);
-            this.progress.splice(this.progress.indexOf(p), 1);
+          let toastId = this.$toast(p.name + " - 0%", {
+            closeButton: false,
           });
+          
+          const formData = new FormData();
+          formData.append("file", this.dropFiles[i]);
+          formData.append("project", this.project.uuid);
+          const headers = { "Content-Type": "multipart/form-data" };
+          axios
+            .post(this.url, formData, {
+              headers: headers,
+              onUploadProgress: (progressEvent) => {
+                p.progress = Math.floor(
+                  (progressEvent.loaded / progressEvent.total) * 100
+                );
+                this.$toast.update(toastId, {
+                  content: p.name + " - " + p.progress + "%",
+                });
+              },
+            })
+            .then((res) => {
+              console.log(res);
+              this.$toast.update(toastId,{options: { timeout:3000},content: "Successfully uploaded " + p.name});
+            }).catch(()=>{
+              this.$toast.update(toastId,{options: { timeout:3000,type:TYPE.WARNING},content: "Ops... Something went wrong"});
+            });
+          files.splice(i, 1);
           this.changed = true;
         }
-
       }
-    }
+    },
   },
 };
 </script>
 
 <style scoped>
-.fade-enter-active {
-  transition: opacity .5s;
-}
-
-.fade-leave-active {
-  transition: opacity 10s;
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
 </style>
