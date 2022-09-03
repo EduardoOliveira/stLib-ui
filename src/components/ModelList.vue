@@ -17,8 +17,8 @@
 
       <footer class="card-footer">
         <a :href="baseUrl + '/models/get/' + model.sha1" class="card-footer-item">Download</a>
-        <a v-if="hasViewer && !visible.includes(model.sha1)" @click="onAddToViewer(model)" class="card-footer-item">View</a>
-        <a v-if="hasViewer &&  visible.includes(model.sha1)" @click="removeFromViewer(model)" class="card-footer-item">Hide</a>
+        <a v-if="hasViewer && !visible.includes(model.sha1)" @click="onAddToViewer(model)" class="card-footer-item is-hidden-touch">View</a>
+        <a v-if="hasViewer &&  visible.includes(model.sha1)" @click="removeFromViewer(model)" class="card-footer-item is-hidden-touch">Hide</a>
       </footer>
     </div>
   </div>
