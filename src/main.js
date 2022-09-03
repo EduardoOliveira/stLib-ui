@@ -12,8 +12,6 @@ import axios from 'axios'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
 
-Vue.use(Buefy)
-Vue.use(PiniaVuePlugin)
 
 const options = {
   position: POSITION.BOTTOM_RIGHT ,
@@ -22,6 +20,9 @@ const options = {
 
 
 Vue.use(Toast, options);
+Vue.use(Buefy)
+Vue.use(PiniaVuePlugin)
+
 axios.defaults.baseURL = import.meta.env.VITE_API_URL
 
 

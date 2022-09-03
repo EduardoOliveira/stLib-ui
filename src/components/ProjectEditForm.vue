@@ -19,7 +19,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" name="path" disabled v-model="p.path" />
+            <input class="input" type="text" name="path" v-model="p.path" />
           </div>
         </div>
       </div>

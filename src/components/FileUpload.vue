@@ -13,80 +13,108 @@
 <script>
 import axios from "axios";
 import { TYPE } from "vue-toastification";
+
 export default {
   name: "FileUpload",
   created() {},
   data() {
     return {
       dropFiles: [],
-      changed: false,
+      complete: false,
       baseUrl: import.meta.env.VITE_API_URL,
       visible: [],
+      response: false,
     };
   },
   props: {
     project: {
       type: Object,
-      required: true,
     },
     url: {
       type: String,
-      required: true,
+      default: "/projects",
+    },
+    newProject: {
+      type: Boolean,
     },
   },
   watch: {
-    dropFiles(files) {
-      this.uploadFiles(files);
+    dropFiles() {
+      this.uploadFiles(this.dropFiles);
     },
-    progress(progress) {
-      if (this.changed && progress.length == 0) {
-        this.$emit("uploaded");
-        this.changed = false;
+    complete() {
+      if (this.complete) {
+        console.log("complete",this.response);
+        this.$emit("uploaded", this.response);
+        this.complete = false;
       }
     },
   },
   methods: {
-    uploadFiles(files) {
+    async uploadFiles(files) {
       if (files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-          let p = {
-            progress: 0,
-            name: files[i].name,
-          };
-          let toastId = this.$toast(p.name + " - 0%", {
+        if (this.newProject) {
+          let toastId = this.$toast("0%", {
             closeButton: false,
           });
-          
           const formData = new FormData();
-          formData.append("file", this.dropFiles[i]);
-          formData.append("project", this.project.uuid);
-          const headers = { "Content-Type": "multipart/form-data" };
-          axios
-            .post(this.url, formData, {
-              headers: headers,
-              onUploadProgress: (progressEvent) => {
-                p.progress = Math.floor(
-                  (progressEvent.loaded / progressEvent.total) * 100
-                );
-                this.$toast.update(toastId, {
-                  content: p.name + " - " + p.progress + "%",
-                });
-              },
-            })
-            .then((res) => {
-              console.log(res);
-              this.$toast.update(toastId,{options: { timeout:3000},content: "Successfully uploaded " + p.name});
-            }).catch(()=>{
-              this.$toast.update(toastId,{options: { timeout:3000,type:TYPE.WARNING},content: "Ops... Something went wrong"});
-            });
-          files.splice(i, 1);
-          this.changed = true;
+          formData.append("project", "new");
+          for (let i = 0; i < files.length; i++) {
+            formData.append("files", files[i]);
+          }
+          this.response = await this.send("Uploading", formData, toastId);
+          console.log("response", this.response);
+        } else {
+          for (let i = 0; i < files.length; i++) {
+            this.sendFile(files[i], this.project.uuid);
+          }
         }
+        this.uploadFiles = [];
+        this.complete = true;
+      }
+    },
+    sendFile(file, id) {
+      let toastId = this.$toast("0%", {
+        closeButton: false,
+      });
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("project", id);
+      this.send(file.name, formData, toastId);
+    },
+    async send(name, formData, toastId) {
+      const headers = { "Content-Type": "multipart/form-data" };
+      const resp = await axios({
+        method: "post",
+        url: this.url,
+        data: formData,
+        headers: headers,
+        onUploadProgress: (progressEvent) => {
+          this.$toast.update(toastId, {
+            content: name + " - " + Math.floor(
+            (progressEvent.loaded / progressEvent.total) * 100
+          ) + "%",
+          });
+        },
+      });
+      console.log(resp.status);
+      if (resp.status == 200) {
+        this.$toast.update(toastId, {
+          options: { timeout: 3000 },
+          content: "Successfully uploaded " + name,
+        });
+        return resp.data;
+      } else {
+        this.$toast.update(toastId, {
+          options: { timeout: 3000, type: TYPE.WARNING },
+          content: "Ops... Something went wrong",
+        });
+        return false;
       }
     },
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -81,12 +81,12 @@ export const useProjectsStore = defineStore({
       if(uuid ){
         for(let i in this.projects){
           if(this.projects[i].uuid == uuid){
-            const response = await axios.post("/projects", this.projects[i]);
+            const response = await axios.post("/projects/"+this.projects[i].uuid, this.projects[i]);
             this.project = response.data;
           }
         }
       }else{
-        const response = await axios.post("/projects", this.selectedProject);
+        const response = await axios.post("/projects/"+this.selectedProject.uuid, this.selectedProject);
         this.project = response.data;
       }
     },
