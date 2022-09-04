@@ -1,5 +1,5 @@
 <template>
-  <div class="box mb-2">
+  <div class="block mb-2">
     <b-upload v-model="dropFiles" multiple drag-drop expanded>
       <section>
         <div class="content has-text-centered">

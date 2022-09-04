@@ -31,8 +31,16 @@
           <strong>New Project</strong>
         </div>
       </template>
-      <div class="panel-block box">
-        <file-upload new-project @uploaded="onUploaded" />
+      <div class="panel-block" style="display:block">
+          <div class="field has-addons">
+            <div class="control">
+              <input class="input" type="text" placeholder="URL or thing:xxx" v-model="url"/>
+            </div>
+            <div class="control">
+              <a class="button is-info" @click="importProject"> Import </a>
+            </div>
+          </div>
+          <file-upload new-project @uploaded="onUploaded" />
       </div>
     </b-collapse>
   </div>
@@ -44,6 +52,7 @@ import pinia from "@/stores/store.js";
 import ProjectCard from "../../components/ProjectCard.vue";
 import ProjectFilter from "@/components/ProjectFilter.vue";
 import FileUpload from "../../components/FileUpload.vue";
+import axios from "axios";
 
 export default {
   name: "ProjectsIndex",
@@ -54,6 +63,7 @@ export default {
       isOpen: false,
       showZone: false,
       dropFiles: [],
+      url: "",
     };
   },
   computed: {
@@ -76,7 +86,7 @@ export default {
     onUploaded(response) {
       console.log("uploaded", response.uuid);
       if (response && response.uuid) {
-        this.$router.push({ path: `/projects/${response.uuid}/edit`});
+        this.$router.push({ path: `/projects/${response.uuid}/edit` });
       }
     },
     onInitializeProjects() {
@@ -89,6 +99,19 @@ export default {
     },
     endDrag: function () {
       setTimeout(() => (this.isOpen = false), 5000);
+    },
+    importProject() {
+      if (this.url) {
+        axios.post("/downloader/fetch", { url: this.url }).then(() => {
+          this.$toast("Project imported", {
+            type: "success",
+          });
+        }).catch(() => {
+          this.$toast("Failed to import project", {
+            type: "error",
+          });
+        });
+      }
     },
   },
 };
