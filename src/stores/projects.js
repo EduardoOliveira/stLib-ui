@@ -165,5 +165,13 @@ export const useProjectsStore = defineStore({
       this.selectedProject.default_image_path = imagePath;
       await this.percistProject();
     },
+    async initProject(uuid) {
+      await axios.post(`/projects/${uuid}/init`);
+      for (let i in this.projects){
+        if(this.projects[i].uuid == uuid){
+          this.projects[i].initialized = true;
+        }
+      }
+    },
   },
 });

@@ -91,7 +91,7 @@ export default {
     },
     onInitializeProjects() {
       for (let i in this.projects) {
-        useProjectsStore(pinia).percistProject(this.projects[i].uuid);
+        useProjectsStore(pinia).initProject(this.projects[i].uuid);
       }
     },
     isDrag: function () {
