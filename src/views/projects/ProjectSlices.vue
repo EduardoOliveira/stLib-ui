@@ -26,32 +26,40 @@
     <div class="box column is-two-thirds content mt-2" v-if="slice">
       <h4>{{ slice?.name }}</h4>
       <div class="columns">
-        <div class="column is-third content">
+        <div class="column content">
           <h6>Path</h6>
           <p>{{ slice?.path }}</p>
         </div>
-        <div class="column is-third content">
+        <div class="column content">
+          <h6>Duration</h6>
+          <p>{{ slice?.duration }}</p>
+        </div>
+        <div class="column content">
           <h6>Layers</h6>
           <p>{{ slice?.layer_count }}</p>
         </div>
-        <div class="column is-third content">
+        <div class="column content">
+          <h6>Duration</h6>
+          <p>{{ slice?.duration }}</p>
+        </div>
+        <div class="column content">
           <h6>Cost</h6>
           <p>{{ slice?.cost }}</p>
         </div>
       </div>
-      <h4>Filment</h4>
+      <h4>Filament</h4>
       <div class="columns">
-        <div class="column is-third content">
+        <div class="column content">
           <h6>Length</h6>
-          <p>{{ slice?.filament?.length }}</p>
+          <p>{{ slice?.filament?.length }}mm</p>
         </div>
-        <div class="column is-third content">
+        <div class="column content">
           <h6>Mass</h6>
-          <p>{{ slice?.filament?.mass }}</p>
+          <p>{{ slice?.filament?.mass }}mm&#179;</p>
         </div>
-        <div class="column is-third content">
+        <div class="column content">
           <h6>Weight</h6>
-          <p>{{ slice?.filament?.weight }}</p>
+          <p>{{ slice?.filament?.weight }}g</p>
         </div>
       </div>
     </div>
