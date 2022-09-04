@@ -1,25 +1,24 @@
 <template>
-  <div class="card m-1">
-    <div class="card-image">
-      <b-image
-      :src="baseUrl + project?.default_image_path"
-            ratio="4by3"
+  <router-link
+    class="title is-4"
+    :to="{ path: '/' + context + '/' + project.uuid }"
+  >
+    <div class="card m-1">
+      <div class="card-image">
+        <b-image
+          :src="baseUrl + project?.default_image_path"
+          ratio="4by3"
         ></b-image>
-    </div>
-    <div class="card-content">
-      <div class="media">
-        <div class="media-content">
-          <router-link
-            class="title is-4"
-            :to="{ path: '/' + context + '/' + project.uuid }"
-            >{{ project.name }}</router-link
-          >
-          <!--<p class="subtitle is-6">@johnsmith</p>-->
-          
+      </div>
+      <div class="card-content">
+        <div class="media">
+          <div class="media-content">
+            {{ project.name }}
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    </div></router-link
+  >
 </template>
 
 <script>
@@ -51,7 +50,7 @@ export default {
   max-width: 300px;
   min-width: 300px;
 }
-.card .media-content{
+.card .media-content {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
