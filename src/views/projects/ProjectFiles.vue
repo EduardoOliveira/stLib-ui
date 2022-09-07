@@ -15,7 +15,7 @@
         </div>
       </div>
       <footer class="card-footer">
-        <a :href="baseUrl + '/files/get/' + file.sha1" class="card-footer-item">Download</a>
+        <a :href="baseUrl + '/projects/'+project.uuid+'/assets/'+ file.sha1+'?download=true'" class="card-footer-item">Download</a>
       </footer>
     </div>
   </div>
@@ -39,7 +39,7 @@ export default {
       return useProjectsStore(pinia).selectedProject;
     },
     files() {
-      return useProjectsStore(pinia).selectedProject.files.sort((a, b) => (a.name > b.name) ? 1 : -1);
+      return useProjectsStore(pinia).getSelectedProjectFiles.sort((a, b) => (a.name > b.name) ? 1 : -1);
     },
   },
   props: {},

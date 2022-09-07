@@ -86,7 +86,7 @@ export default {
     },
     slices() {
       let rtn = [];
-      for (let img of useProjectsStore(pinia).selectedProject.slices) {
+      for (let img of useProjectsStore(pinia).getSelectedProjectSlices) {
         rtn.push(img);
       }
       return rtn.sort((a, b) => (a.name > b.name) ? 1 : -1);

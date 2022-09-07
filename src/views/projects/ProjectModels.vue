@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     models() {
-      return useProjectsStore(pinia).selectedProject.models.sort((a, b) => (a.name > b.name) ? 1 : -1);
+      return useProjectsStore(pinia).getSelectedProjectModels;
     },
   },
   props: {},

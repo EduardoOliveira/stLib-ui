@@ -1,7 +1,7 @@
 <template>
   <div class="pt-5 is-flex is-flex-direction-column is-flex-grow-1 is-flex-shrink-1 overflow-inherit">
     <section class="hero has-background mx-5 mb-5 is-flex-shrink-0  is-dark">
-      <img class="hero-background is-transparent" :src="baseUrl + project.default_image_path" />
+      <img class="hero-background is-transparent" :src="baseUrl + '/projects/'+project.uuid+'/assets/'+ project.default_image_path" />
       <div class="hero-body">
         <div class="container">
           <p class="title">

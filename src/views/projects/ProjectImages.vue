@@ -7,12 +7,13 @@
       </p>
     </b-modal>
     <FileUpload :project="project" :url="baseUrl + '/images'" class="upload" @uploaded="onUploaded" />
+
     <div class="card m-1" v-for="img in images" :key="img.sha1">
       <div class="card-image" @click="
   show = true;
-url = baseUrl + img.path + img.sha1;
+url = baseUrl + '/projects/'+project.uuid+'/assets/'+ img.sha1;
       ">
-        <b-image :src="baseUrl + img.path + img.sha1" ratio="4by3"></b-image>
+        <b-image :src="baseUrl + '/projects/'+project.uuid+'/assets/'+ img.sha1" ratio="4by3"></b-image>
       </div>
 
       <div class="card-content">
@@ -23,7 +24,8 @@ url = baseUrl + img.path + img.sha1;
         </div>
       </div>
       <footer class="card-footer">
-        <a :href="baseUrl + img.path + img.sha1" class="card-footer-item">Download</a>
+        <a :href="baseUrl + '/projects/'+project.uuid+'/assets/'+ img.sha1+'?download=true'"
+          class="card-footer-item">Download</a>
         <a @click="makeDefaultImage(img)" class="card-footer-item">Main image</a>
       </footer>
     </div>
@@ -50,25 +52,13 @@ export default {
       return useProjectsStore(pinia).selectedProject;
     },
     images() {
-      let rtn = [];
-      for (let img of useProjectsStore(pinia).selectedProject.images) {
-        img.path = "/images/";
-        rtn.push(img);
-      }
-      for (let model of useProjectsStore(pinia).selectedProject.models) {
-        rtn.push({
-          sha1: model.sha1,
-          name: model.name,
-          path: "/models/render/",
-        });
-      }
-      return rtn.sort((a, b) => (a.name > b.name) ? 1 : -1);
+      return useProjectsStore(pinia).getSelectedProjectImages.sort((a, b) => (a.name > b.name) ? 1 : -1);
     },
   },
   props: {},
   methods: {
     makeDefaultImage(img) {
-      useProjectsStore(pinia).setSelectedProjectImage(img.path + img.sha1);
+      useProjectsStore(pinia).setSelectedProjectImage(img.sha1);
     },
     onUploaded() {
       useProjectsStore(pinia).fetchProjectImages(this.project.uuid, true);

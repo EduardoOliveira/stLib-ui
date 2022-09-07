@@ -6,7 +6,7 @@
     <div class="card m-1">
       <div class="card-image">
         <b-image
-          :src="baseUrl + project?.default_image_path"
+          :src="baseUrl+'/projects/'+project?.uuid +'/assets/'+ project?.default_image_path"
           ratio="4by3"
         ></b-image>
       </div>
