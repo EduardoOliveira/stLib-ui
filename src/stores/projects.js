@@ -77,11 +77,22 @@ export const useProjectsStore = defineStore({
       this.filter.searchableKeys = [];
       for (let i in response.data) {
         response.data[i].assets = {};
-
-        if (!this.filter.searchableKeys.includes(response.data[i].name)) {
-          this.filter.searchableKeys.push(response.data[i].name);
+      }
+      this.projects = response.data;
+      this.reloadFilters();
+    },
+    reloadFilters() {
+      this.filter = {
+        initialized: true,
+        search: "",
+        tags: {},
+        searchableKeys: [],
+      };
+      for (let i in this.projects) {
+        if (!this.filter.searchableKeys.includes(this.projects[i].name)) {
+          this.filter.searchableKeys.push(this.projects[i].name);
         }
-        for (let tag of response.data[i].tags) {
+        for (let tag of this.projects[i].tags) {
           if (!this.filter.tags[tag]) {
             this.filter.tags[tag] = 1;
           } else {
@@ -89,13 +100,13 @@ export const useProjectsStore = defineStore({
           }
         }
       }
-      this.projects = response.data;
     },
     async fetchProject(uuid) {
       const response = await axios.get(`/projects/${uuid}`);
       let p = response.data;
       p.assets = {};
       this.projects[p.uuid] = p;
+      this.reloadFilters();
     },
     async percistProject(uuid) {
       console.log("persisting project", uuid, this.projects[uuid]);
@@ -115,9 +126,14 @@ export const useProjectsStore = defineStore({
           this.selectedProject
         );
         this.project = response.data;
+        this.fetchProjectAssets(this.selectedProject.uuid, true);
       }
+      this.reloadFilters();
     },
     async selectProject(uuid) {
+      if (!this.projects[uuid]) {
+        await this.fetchProject(uuid);
+      }
       if (Object.keys(this.projects[uuid].assets).length == 0) {
         await this.fetchProjectAssets(uuid);
       }

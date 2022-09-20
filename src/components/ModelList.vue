@@ -1,12 +1,12 @@
 <template>
   <div>
-    <FileUpload :project="project" :url="this.baseUrl + '/models'" v-if="hasUpload" @uploaded="onUploaded"/>
+    <FileUpload :project="project" :url="this.baseUrl + '/models'" v-if="hasUpload" @uploaded="onUploaded" />
     <div class="card mb-2" v-for="(model, sha1) in models" :key="sha1">
       <div class="card-content">
         <div class="media">
           <div class="media-left">
             <figure class="image is-48x48">
-              <img :src="baseUrl + '/models/render/' + model.sha1" :alt="model.name">
+              <img :src="baseUrl + '/projects/'+ project?.uuid+'/assets/' + model.model?.image_sha1" :alt="model.name">
             </figure>
           </div>
           <div class="media-content">
@@ -16,9 +16,14 @@
       </div>
 
       <footer class="card-footer">
-        <a :href="baseUrl + '/models/get/' + model.sha1" class="card-footer-item">Download</a>
-        <a v-if="hasViewer && !visible.includes(model.sha1)" @click="onAddToViewer(model)" class="card-footer-item is-hidden-touch">View</a>
-        <a v-if="hasViewer &&  visible.includes(model.sha1)" @click="removeFromViewer(model)" class="card-footer-item is-hidden-touch">Hide</a>
+        <a :href="baseUrl + '/projects/'+ project?.uuid+'/assets/' + model.sha1+'?download=true'"
+          class="card-footer-item">Download</a>
+        <a v-if="hasViewer && !visible.includes(model.sha1)" @click="onAddToViewer(model)"
+          class="card-footer-item is-hidden-touch">View</a>
+        <a v-if="hasViewer &&  visible.includes(model.sha1)" @click="removeFromViewer(model)"
+          class="card-footer-item is-hidden-touch">Hide</a>
+
+        <a class="card-footer-item" @click.prevent="editAsset(model)">Edit</a>
       </footer>
     </div>
   </div>
@@ -26,6 +31,7 @@
 
 <script>
 import { useProjectsStore } from "../stores/projects.js";
+import { useAssetsStore } from "../stores/assets.js";
 import pinia from "../stores/store.js";
 import FileUpload from "./FileUpload.vue";
 
@@ -70,10 +76,14 @@ export default {
     },
     onUploaded() {
       useProjectsStore(pinia).fetchProjectModels(this.project.uuid, true);
-    }
+    },
+    editAsset(asset) {
+      useAssetsStore(pinia).setSelectedAsset(asset);
+      this.$router.push({ path: "/assets" });
+    },
   },
   components: {
-    FileUpload
+    FileUpload,
   }
 };
 </script>

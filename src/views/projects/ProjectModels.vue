@@ -3,7 +3,7 @@
     <div class="column is-one-fifths mr-5 overflow-y-auto">
       <ModelList :models="models" :has-viewer="true" @add-to-viewer="addToVIewer" @remove-from-viewer="removeFromVIewer"/>
     </div>
-    <ModelViewer :models="rendered" class="box column is-four-fifths is-hidden-touch p-0"/>
+    <ModelViewer :models="rendered" :project="project" class="box column is-four-fifths is-hidden-touch p-0"/>
   </div>
 </template>
 
@@ -24,6 +24,9 @@ export default {
   computed: {
     models() {
       return useProjectsStore(pinia).getSelectedProjectModels;
+    },
+    project() {
+      return useProjectsStore(pinia).getSelectedProject;
     },
   },
   props: {},

@@ -16,6 +16,7 @@
       </div>
       <footer class="card-footer">
         <a :href="baseUrl + '/projects/'+project.uuid+'/assets/'+ file.sha1+'?download=true'" class="card-footer-item">Download</a>
+        <a class="card-footer-item" @click.prevent="editAsset(file)">Edit</a>
       </footer>
     </div>
   </div>
@@ -23,6 +24,7 @@
 
 <script>
 import { useProjectsStore } from "../../stores/projects.js";
+import { useAssetsStore } from "../../stores/assets.js";
 import pinia from "@/stores/store.js";
 import FileUpload from "../../components/FileUpload.vue";
 
@@ -31,6 +33,7 @@ export default {
   created() { },
   data() {
     return {
+      openFile:{},
       baseUrl: import.meta.env.VITE_API_URL,
     };
   },
@@ -44,7 +47,12 @@ export default {
   },
   props: {},
   methods: {
+    openModal(file) {
+      this.isModalOpen = true;
+      this.openFile = file;
+    },
     toIcon(extension) {
+      console.log(extension)
       if (extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".gif") {
         return "image-area";
       } else if (extension == ".mp4" || extension == ".webm" || extension == ".ogg" || extension == ".ogv" || extension == ".avi" || extension == ".mov" || extension == ".wmv" || extension == ".flv" || extension == ".mkv" || extension == ".m4v" || extension == ".mpg" || extension == ".mpeg" || extension == ".3gp" || extension == ".3g2") {
@@ -58,7 +66,7 @@ export default {
       } else if (extension == ".ppt" || extension == ".pptx") {
         return "file-powerpoint";
       } else if (extension == ".txt") {
-        return "file-text";
+        return "file-document-outline";
       } else if (extension == ".zip" || extension == ".rar") {
         return "zip-box";
       } else if (extension == ".mp3" || extension == ".wav" || extension == ".wma" || extension == ".aac" || extension == ".flac" || extension == ".m4a" || extension == ".oga" || extension == ".ogg" || extension == ".opus" || extension == ".webma" || extension == ".weba" || extension == ".webm") {
@@ -71,7 +79,11 @@ export default {
     },
     onUploaded() {
       useProjectsStore(pinia).fetchProjectFiles(this.project.uuid, true);
-    }
+    },
+    editAsset(asset) {
+      useAssetsStore(pinia).setSelectedAsset(asset);
+      this.$router.push({ path: "/assets" });
+    },
   },
   components: { FileUpload }
 };

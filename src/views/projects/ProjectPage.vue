@@ -83,10 +83,12 @@ export default {
     },
   },
   beforeRouteEnter(to, from, next) {
+    console.log("enter")
     useProjectsStore(pinia).selectProject(to.params.uuid);
     next();
   },
   beforeRouteUpdate(to, from, next) {
+    console.log("enter2")
     useProjectsStore(pinia).selectProject(to.params.uuid);
     next();
   },

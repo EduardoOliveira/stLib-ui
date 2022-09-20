@@ -83,7 +83,7 @@ export default {
     },
     addModel: function (model) {
       let that = this;
-      this.loader.load(this.baseUrl + '/models/get/' + model.sha1, function (geometry) {
+      this.loader.load(this.baseUrl + '/projects/'+this.project.uuid+'/assets/' + model.sha1, function (geometry) {
 
         console.log("loaded")
         const mesh = new THREE.Mesh(geometry, that.material);
@@ -172,6 +172,10 @@ export default {
   props: {
     models: {
       type: Array,
+      required: true
+    },
+    project: {
+      type: Object,
       required: true
     }
   },
