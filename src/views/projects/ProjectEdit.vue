@@ -13,11 +13,12 @@ import { useProjectsStore } from "../../stores/projects.js";
 import { mapWritableState } from "pinia";
 import pinia from "@/stores/store.js";
 import ProjectEditForm from "../../components/ProjectEditForm.vue";
+import { TYPE } from "vue-toastification";
 
 export default {
   name: "ProjectEdit",
   components: { ProjectEditForm },
-  created() {},
+  created() { },
   data() {
     return {};
   },
@@ -29,12 +30,24 @@ export default {
   props: {},
   methods: {
     save() {
-      useProjectsStore(pinia).percistProject();
-      this.$router.push("/projects/"+ this.project.uuid);
+      try {
+        useProjectsStore(pinia).percistProject();
+        this.$toast("Project Saved", {
+          timeout: 2000,
+        });
+        this.$router.push("/projects/" + this.project.uuid);
+      } catch (e) {
+        this.$toast("Failed to save project", {
+          timeout: 2000,
+          type: TYPE.WARNING
+        });
+      }
     },
   },
-  mounted() {},
+  mounted() { },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

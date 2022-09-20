@@ -7,6 +7,7 @@ import ProjectModels from '../views/projects/ProjectModels.vue'
 import ProjectImages from '../views/projects/ProjectImages.vue'
 import ProjectSlices from '../views/projects/ProjectSlices.vue'
 import ProjectFiles from '../views/projects/ProjectFiles.vue'
+import AssetEdit from '../views/assets/AssetEdit.vue'
 
 Vue.use(VueRouter)
 
@@ -45,14 +46,11 @@ const router = new VueRouter({
         }
       ]
     },
-    /*{
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/projects/ProjectsIndex.vue')
-    }*/
+    {
+      path: '/assets',
+      component: AssetEdit,
+      props: true
+    },
   ]
 })
 
