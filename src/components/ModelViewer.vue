@@ -6,6 +6,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
+import { ThreeMFLoader } from 'three/examples/jsm/loaders/3MFLoader.js';
 
 export default {
   name: "ModelViewer",
@@ -17,7 +18,8 @@ export default {
 
     const material = new THREE.MeshPhongMaterial({ color: 0x468966, specular: 0x111111, shininess: 200 });
     const light = new THREE.HemisphereLight(0x443333, 0x111122)
-    const loader = new STLLoader();
+    const stlLoader = new STLLoader();
+    const mfLoader = new ThreeMFLoader();
     const renderer = new THREE.WebGLRenderer({ antialias: true });
 
     return {
@@ -26,7 +28,8 @@ export default {
       camera: camera,
       material: material,
       controls: [],
-      loader: loader,
+      stlLoader: stlLoader,
+      mfLoader: mfLoader,
       renderer: renderer,
       light: light,
       speed: 0.01,
@@ -36,7 +39,7 @@ export default {
   created: function () {
     this.scene.add(this.camera)
     this.scene.add(this.light)
-    this.scene.background = new THREE.Color(0xFFFFFF )
+    this.scene.background = new THREE.Color(0xFFFFFF)
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.outputEncoding = THREE.sRGBEncoding;
     this.renderer.shadowMap.enabled = true;
@@ -83,27 +86,39 @@ export default {
     },
     addModel: function (model) {
       let that = this;
-      this.loader.load(this.baseUrl + '/projects/'+this.project.uuid+'/assets/' + model.sha1, function (geometry) {
+      let loader = this.stlLoader
 
+      if (model.extension == ".3mf") {
+        loader = this.mfLoader
+      }
+      loader.load(this.baseUrl + '/projects/' + this.project.uuid + '/assets/' + model.sha1, function (object) {
+        
         console.log("loaded")
-        const mesh = new THREE.Mesh(geometry, that.material);
+        if (object.morphAttributes) {
+          const mesh = new THREE.Mesh(object, that.material);
+          mesh.position.set(0, -Math.PI, 0);
+          mesh.rotation.set(-Math.PI / 2, 0, 0);
+          mesh.scale.set(0.1, 0.1, 0.1);
 
-        mesh.position.set(0, -Math.PI, 0);
-        mesh.rotation.set(-Math.PI / 2, 0, 0);
-        mesh.scale.set(0.1, 0.1, 0.1);
+          mesh.castShadow = true;
+          mesh.receiveShadow = true;
+          mesh.name = model.sha1;
+          that.rendered[model.sha1] = mesh.uuid;
 
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        mesh.name = model.sha1;
-        that.rendered[model.sha1] = mesh.uuid;
-
-        //const box = new THREE.BoxHelper(mesh, 0xffffff);
-        //that.scene.add(box);
-        that.scene.add(mesh);
-
+          //const box = new THREE.BoxHelper(mesh, 0xffffff);
+          //that.scene.add(box);
+          that.scene.add(mesh);
+          object = mesh;
+        } else {
+          object.quaternion.setFromEuler(new THREE.Euler(- Math.PI / 2, 0, 0));
+          object.traverse(function (child) {
+            child.castShadow = true;
+          });
+          that.scene.add(object);
+        }
 
         var boundingBox = new THREE.Box3()
-        boundingBox.setFromObject(mesh);
+        boundingBox.setFromObject(object);
         const center = boundingBox.getCenter(new THREE.Vector3());
         const size = boundingBox.getSize(new THREE.Vector3());
 
@@ -140,7 +155,7 @@ export default {
       })
     },
     remove: function (sha1) {
-      const object = this.scene.getObjectByProperty('uuid',this.rendered[sha1]);
+      const object = this.scene.getObjectByProperty('uuid', this.rendered[sha1]);
       this.scene.remove(object);
       object.geometry.dispose();
       object.material.dispose();
@@ -183,4 +198,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>

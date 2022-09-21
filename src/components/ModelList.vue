@@ -5,9 +5,8 @@
       <div class="card-content">
         <div class="media">
           <div class="media-left">
-            <figure class="image is-48x48">
-              <img :src="baseUrl + '/projects/'+ project?.uuid+'/assets/' + model.model?.image_sha1" :alt="model.name">
-            </figure>
+            <b-image :src="baseUrl + '/projects/'+ project?.uuid+'/assets/' + model.model?.image_sha1" :alt="model.name"
+            src-fallback="/cube-outline.png" ratio="1by1" class="image is-48x48"></b-image>
           </div>
           <div class="media-content">
             <p class="title is-4">{{ model.name }}</p>
@@ -22,7 +21,6 @@
           class="card-footer-item is-hidden-touch">View</a>
         <a v-if="hasViewer &&  visible.includes(model.sha1)" @click="removeFromViewer(model)"
           class="card-footer-item is-hidden-touch">Hide</a>
-
         <a class="card-footer-item" @click.prevent="editAsset(model)">Edit</a>
       </footer>
     </div>
